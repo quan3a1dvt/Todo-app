@@ -4,7 +4,6 @@ import {ref, onMounted, computed} from 'vue'
 
 
 const todos = ref([])
-const name = ref('')
 const input_content = ref('')
 const input_priority = ref(null)
 const input_date = ref('')
@@ -39,14 +38,15 @@ const removeTodo = (todo) => {
 
 const selected = (todo) => {
   todo.selected = true
-  var len = todos.length
+  var len = todos.value.length
+  let i
+  console.log(len)
   for (i = 0; i < len; i++){
-    if (todos[i] !== todo){
-      todos[i].selected = false;
+    if (todos.value[i] !== todo){
+      todos.value[i].selected = false;
     }
   }
 }
-
 
 onMounted(() => {
   todos.value = []
@@ -79,7 +79,7 @@ onMounted(() => {
 						<div>None</div>
 					</label>
 
-          <label>
+          			<label>
 						<input 
 							type="radio" 
 							name="priority" 
@@ -113,11 +113,11 @@ onMounted(() => {
 						<div>High</div>
 					</label>  
         </div>
-        <!-- <h4>Set date and time</h4>
+        <h4>Set date and time</h4>
         <div class="time">
             <input type="date" style="font-size: 1.2rem" v-model="input_date"/>
             <input type="time" style="font-size: 1.2rem" v-model="input_time"/>
-        </div> -->
+        </div> 
         
         <input type="submit" value="Add todo" />
        
@@ -133,18 +133,18 @@ onMounted(() => {
 					</label>
 
 					<div class="todo-content">
-						<input type="text" v-model="todo.content" />
+						<input type="text" :readonly=!todo.selected v-model="todo.content" />
 					</div>
 
           <!-- <div class="todo-time">
 						<input type="text" v-model="todo.date" />
 					</div> -->
 
-					<div class="actions">
+					<div v-if="todo.selected" class="actions">
 						<button class="delete" @click="removeTodo(todo)">Delete</button>
 					</div>
 				</div>
-
+				
 			</div>
 		</section>
   </main>
