@@ -6,12 +6,15 @@ import {ref, onMounted, computed} from 'vue'
 const todos = ref([])
 const input_content = ref('')
 const input_priority = ref(null)
+const edit_date = ref('')
+const edit_time = ref('')
+const edit_content = ref('')
 const input_date = ref('')
 const input_time = ref('')
 const input_datetime = ref('')
 const input_createon = ref('')
 const todos_asc = computed(() => todos.value.sort((a,b) =>{
-  return b.datetime  - a.datetime
+  return a.datetime  - b.datetime
 }))
 var options = {month: 'short', day: 'numeric' };
 
@@ -40,6 +43,18 @@ const removeTodo = (todo) => {
 	todos.value = todos.value.filter((t) => t !== todo)
 }
 
+const saveTodo = (todo) => {
+	
+	let dates = edit_date.value.split('-')
+  	let times = edit_time.value.split(':')
+	todo.date = edit_date.value
+	todo.time = edit_time.value
+	todo.datetime = new Date(dates[0], dates[1], dates[2], times[0], times[1]), 
+	todo.short_datetime = edit_date.value + ' ' + edit_time.value
+	todo.content = edit_content.value
+	todo.selected = false
+}
+
 const selected = (todo) => {
   todo.selected = true
   var len = todos.value.length
@@ -49,8 +64,18 @@ const selected = (todo) => {
       todos.value[i].selected = false;
     }
   }
+  edit_content.value = todo.content
+  edit_date.value = todo.date
+  edit_time.value = todo.time
 }
 
+const deselectall = (() => {
+	var len = todos.value.length
+	let i
+	for (i = 0; i < len; i++){
+		todos.value[i].selected = false;
+	}
+})
 onMounted(() => {
   todos.value = []
   input_date.value = new Date().toISOString().slice(0,10)
@@ -60,12 +85,12 @@ onMounted(() => {
 </script>
 
 <template>
-  <main class="app">
+  <main class="app" @click="deselectall">
     <section>
       <h2>TODO-LIST</h2>
     </section>
     <section class="create-todo">
-      <form @submit.prevent="addTodo">
+      <form @submit.prevent="addTodo" style="user-select: none;">
         <input 
           type="text"
           placeholder="Enter new To-do"
@@ -118,7 +143,7 @@ onMounted(() => {
 			</label>  
         </div>
         <h4>Set date and time</h4>
-        <div class="time">
+        <div class="datetime">
             <input type="date" style="font-size: 1.2rem" v-model="input_date"/>
             <input type="time" style="font-size: 1.2rem" v-model="input_time"/>
         </div> 
@@ -127,29 +152,42 @@ onMounted(() => {
       </form>
     </section>
     <section class="todo-list">
-			<div class="list" id="todo-list">
+			<div class="list" id="todo-list" >
 
-				<div v-for="todo in todos_asc" :class="`todo-item ${todo.done && 'done'}`" @dblclick="selected(todo)">
-					<label>
-						<input type="checkbox" v-model="todo.done" />
-						<span :class="`bubble ${todo.priority}`"></span>
-					</label>
+				<div v-for="todo in todos_asc" :class="`todo-item ${todo.done && 'done'}`" @click.stop @dblclick="selected(todo)">
+					<div v-if="!todo.selected" class="show">
+						<label>
+							<input type="checkbox" v-model="todo.done" />
+							<span :class="`bubble ${todo.priority}`"></span>
+						</label>
 
-					<div class="todo-content">
-						<input type="text" :readonly=!todo.selected v-model="todo.content" />
+						<div class="todo-content">
+							<input type="text" :readonly=true v-model="todo.content" />
+						</div>
+
+						<div class="todo-datetime">
+							<input type="text" :readonly=true d v-model="todo.short_datetime" />
+						</div>
+
+						
 					</div>
-
-          			<div class="todo-datetime">
-						<input type="text" v-model="todo.short_datetime" />
-					</div>
-
-					<div v-if="todo.selected" class="actions">
-						<button class="delete" @click="removeTodo(todo)">Delete</button>
-					</div>
+					<div v-if="todo.selected" class="edit">
+						<div class="todo-content">
+							<input type="text" v-model="edit_content" />
+						</div>
+						<div class="datetime">
+							<input type="date" style="font-size: 1.0rem" v-model="edit_date"/>
+							<input type="time" style="font-size: 1.0rem" v-model="edit_time"/>
+						</div>
+						<div class="actions">
+							<button class="save" @click="saveTodo(todo)">Save</button>
+							<button class="delete" @click="removeTodo(todo)">Delete</button>
+						</div>
+					</div> 
 				</div>
 				
 			</div>
-		</section>
+	</section>
   </main>
 </template>
 

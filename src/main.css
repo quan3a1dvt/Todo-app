@@ -110,7 +110,7 @@ h4 {
 	cursor: pointer;
 }
 
-.create-todo .time {
+.create-todo .datetime {
 	display: grid;
 	grid-template-columns: repeat(2, 1fr);
 	grid-gap: 1rem;
@@ -231,12 +231,37 @@ input:checked ~ .bubble::after {
 	opacity: 0.75;
 }
 
+.todo-list .todo-item .show {
+	display: flex;
+	align-items: center;
+	/* padding: 1rem; */
+	/* margin-bottom: 0.7rem; */
+}
+
+.todo-list .todo-item .edit .todo-content {
+	flex: 1 1 0%;
+	margin-bottom: 0.6rem;
+}
+
+.todo-list .todo-item .edit .todo-content input {
+	color: var(--dark);
+	font-size: 1.125rem;
+}
+.todo-list .todo-item .edit .datetime {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	grid-gap: 1rem;
+    font-size: 1rem;
+	margin-bottom: 0.7rem;
+}
+
 .todo-list .list {
 	margin: 1rem 0;
+	user-select: none;
 } 
 
 .todo-list .todo-item {
-	display: flex;
+	/* display: flex; */
 	align-items: center;
 	background-color: #FFF;
 	padding: 1rem;
@@ -294,6 +319,11 @@ input:checked ~ .bubble::after {
 
 .todo-item .actions .delete {
 	background-color: var(--danger);
+}
+
+.todo-item .actions .save {
+	background-color: var(--danger);
+	margin-right: 0.5rem;
 }
 
 .todo-item.done .todo-content input {
