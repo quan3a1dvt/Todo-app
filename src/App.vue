@@ -1,21 +1,21 @@
-<script setup>
+<script setup >
 
 import {ref, onMounted, computed} from 'vue'
-
+import Datepicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css';
+import moment from 'moment'
 
 const todos = ref([])
 const input_content = ref('')
 const input_priority = ref(null)
+const edit_priority = ref(null)
 const edit_date = ref('')
-const edit_time = ref('')
 const edit_content = ref('')
 const input_date = ref('')
-const input_time = ref('')
-const input_datetime = ref('')
-const input_createon = ref('')
 const todos_asc = computed(() => todos.value.sort((a,b) =>{
   return a.datetime  - b.datetime
 }))
+
 var options = {month: 'short', day: 'numeric' };
 
 const addTodo = () => {
@@ -23,9 +23,6 @@ const addTodo = () => {
     return
   }
   console.log("addTodo")
-  // dates = input_date.split('')
-  let dates = input_date.value.split('-')
-  let times = input_time.value.split(':')
   todos.value.push({
     content: input_content.value,
     priority: input_priority.value,
@@ -33,9 +30,7 @@ const addTodo = () => {
     selected: false,
     createon: new Date(),
     date: input_date.value,
-	time: input_time.value,
-	datetime: new Date(dates[0], dates[1], dates[2], times[0], times[1]), 
-	short_datetime: input_date.value + ' ' + input_time.value
+	short_date: moment(String(input_date.value)).format('DD/MM/YYYY hh:mm')
   })
 }
 
@@ -43,16 +38,12 @@ const removeTodo = (todo) => {
 	todos.value = todos.value.filter((t) => t !== todo)
 }
 
-const saveTodo = (todo) => {
-	
-	let dates = edit_date.value.split('-')
-  	let times = edit_time.value.split(':')
+const saveTodo = (todo) => {	
 	todo.date = edit_date.value
-	todo.time = edit_time.value
-	todo.datetime = new Date(dates[0], dates[1], dates[2], times[0], times[1]), 
-	todo.short_datetime = edit_date.value + ' ' + edit_time.value
+	todo.short_date = moment(String(edit_date.value)).format('DD/MM/YYYY hh:mm')
 	todo.content = edit_content.value
 	todo.selected = false
+	todo.priority = edit_priority.value
 }
 
 const selected = (todo) => {
@@ -65,8 +56,8 @@ const selected = (todo) => {
     }
   }
   edit_content.value = todo.content
+  edit_priority.value = todo.priority
   edit_date.value = todo.date
-  edit_time.value = todo.time
 }
 
 const deselectall = (() => {
@@ -78,11 +69,11 @@ const deselectall = (() => {
 })
 onMounted(() => {
   todos.value = []
-  input_date.value = new Date().toISOString().slice(0,10)
-  input_time.value = '12:00'
+  input_date.value = new Date()
 })
-
 </script>
+
+
 
 <template>
   <main class="app" @click="deselectall">
@@ -143,10 +134,12 @@ onMounted(() => {
 			</label>  
         </div>
         <h4>Set date and time</h4>
-        <div class="datetime">
+        <!-- <div class="datetime">
             <input type="date" style="font-size: 1.2rem" v-model="input_date"/>
             <input type="time" style="font-size: 1.2rem" v-model="input_time"/>
-        </div> 
+        </div>  -->
+	
+		<Datepicker class="datetime" v-model="input_date" inputFormat="dd-MM-YYYY"></Datepicker>
         <input type="submit" value="Add todo" />
        
       </form>
@@ -166,7 +159,7 @@ onMounted(() => {
 						</div>
 
 						<div class="todo-datetime">
-							<input type="text" :readonly=true d v-model="todo.short_datetime" />
+							<input type="text" :readonly=true d v-model="todo.short_date" />
 						</div>
 
 						
@@ -175,10 +168,14 @@ onMounted(() => {
 						<div class="todo-content">
 							<input type="text" v-model="edit_content" />
 						</div>
-						<div class="datetime">
-							<input type="date" style="font-size: 1.0rem" v-model="edit_date"/>
-							<input type="time" style="font-size: 1.0rem" v-model="edit_time"/>
-						</div>
+						<select class="priority" v-model="edit_priority">
+							<!-- <option selected disabled>{{ todo.priority.toUpperCase() }}</option> -->
+							<option value="none">None</option>
+							<option value="low">Low</option>
+							<option value="medium">Medium</option>
+							<option value="high">High</option>
+						</select>
+						<Datepicker class="datetime" v-model="edit_date" :format="format"></Datepicker>
 						<div class="actions">
 							<button class="save" @click="saveTodo(todo)">Save</button>
 							<button class="delete" @click="removeTodo(todo)">Delete</button>

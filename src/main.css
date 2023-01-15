@@ -111,11 +111,11 @@ h4 {
 }
 
 .create-todo .datetime {
-	display: grid;
-	grid-template-columns: repeat(2, 1fr);
-	grid-gap: 1rem;
-	margin-bottom: 1rem;
-    font-size: 2rem;
+	border-radius: 0.5rem;
+	box-shadow: var(--shadow);
+	border-color: black;
+	background-color: #FFF;
+	margin-bottom: 0.7rem;
 }
 
 .FormDate {
@@ -238,6 +238,12 @@ input:checked ~ .bubble::after {
 	/* margin-bottom: 0.7rem; */
 }
 
+.todo-list .todo-item .edit .priority {
+	margin-bottom: 0.6rem;
+	font-size: 1rem;
+}
+
+
 .todo-list .todo-item .edit .todo-content {
 	flex: 1 1 0%;
 	margin-bottom: 0.6rem;
@@ -322,7 +328,7 @@ input:checked ~ .bubble::after {
 }
 
 .todo-item .actions .save {
-	background-color: var(--danger);
+	background-color: green;
 	margin-right: 0.5rem;
 }
 
