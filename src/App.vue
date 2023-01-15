@@ -1,8 +1,9 @@
+
 <script setup >
 
 import {ref, onMounted, computed} from 'vue'
-import Datepicker from '@vuepic/vue-datepicker';
-import '@vuepic/vue-datepicker/dist/main.css';
+// import Datepicker from '@vuepic/vue-datepicker';
+// import '@vuepic/vue-datepicker/dist/main.css';
 import moment from 'moment'
 
 const todos = ref([])
@@ -23,14 +24,15 @@ const addTodo = () => {
     return
   }
   console.log("addTodo")
+  let tmp_createon = new Date()
   todos.value.push({
     content: input_content.value,
     priority: input_priority.value,
     done: false,
     selected: false,
-    createon: new Date(),
-    date: input_date.value,
-	short_date: moment(String(input_date.value)).format('DD/MM/YYYY hh:mm')
+    createon: tmp_createon,
+    date: input_date.value==null?tmp_createon:input_date.value,
+	short_date: moment(String(input_date.value==null?tmp_createon:input_date.value)).format('DD/MM/YYYY hh:mm')
   })
 }
 
@@ -139,7 +141,7 @@ onMounted(() => {
             <input type="time" style="font-size: 1.2rem" v-model="input_time"/>
         </div>  -->
 	
-		<Datepicker class="datetime" v-model="input_date" inputFormat="dd-MM-YYYY"></Datepicker>
+		<Datepicker class="datetime" placeholder="Choose a date" v-model="input_date" format="dd/MM/yyyy HH:mm"/>
         <input type="submit" value="Add todo" />
        
       </form>
@@ -175,7 +177,7 @@ onMounted(() => {
 							<option value="medium">Medium</option>
 							<option value="high">High</option>
 						</select>
-						<Datepicker class="datetime" v-model="edit_date" :format="format"></Datepicker>
+						<Datepicker class="datetime" v-model="edit_date" format="dd/MM/yyyy HH:mm"></Datepicker>
 						<div class="actions">
 							<button class="save" @click="saveTodo(todo)">Save</button>
 							<button class="delete" @click="removeTodo(todo)">Delete</button>
