@@ -1,0 +1,16 @@
+{
+    "common": {
+        "select_lang": "Language"
+    },    
+    "start": "Hello",
+    "content": "Enter new To-do",
+    "priority": {
+        "set": "Set priority",
+        "none": "None",
+        "low": "Low",
+        "medium": "Medium",
+        "high": "High"
+    },
+    "pickdate": "Set date and time"
+    
+}

@@ -1,0 +1,15 @@
+{
+    "common": {
+        "select_lang": "Ngôn ngữ"
+    },
+    "start": "Xin chao",
+    "content": "Ghi chú",
+    "priority": {
+        "set": "Ưu tiên",
+        "none": "Không",
+        "low": "Thấp",
+        "medium": "Trung bình",
+        "high": "Cao"
+    },
+    "pickdate": "Ngày & giờ"
+}
