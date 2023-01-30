@@ -12,6 +12,7 @@
     "@vuepic/vue-datepicker": "^3.6.4",
     "moment": "^2.29.4",
     "vue": "^3.2.45",
+    "vue-flag-icon": "^2.1.0",
     "vue-i18n": "^9.2.2"
   },
   "devDependencies": {

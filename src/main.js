@@ -3,11 +3,11 @@ import './main.css'
 import App from './App.vue'
 import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
-import VueI18n from 'vue-i18n'
+import { createI18n } from 'vue-i18n'
 // import vnMessage from './lang/vn.json'
 // import enMessage from './lang/en.json'
-Vue.use(VueI18n)
-const i18n = new VueI18n({
+
+const i18n = createI18n({
     locale: 'en',
     messages: {
       en: {
@@ -15,8 +15,9 @@ const i18n = new VueI18n({
       }
     }
 })
-const app = createApp(App);
 
+const app = createApp(App);
+app.use(i18n)
 app.component('Datepicker', Datepicker);
 app.mount('#app');
 

@@ -1,17 +1,10 @@
-<<<<<<< HEAD
-<script>
-export default {
-  name: 'Vue-i18n',
-}
-</script>
-=======
 
->>>>>>> 661ab072a023444b7e24e829643349e3299ffcd7
 <script setup >
 
 import {ref, onMounted, computed} from 'vue'
 // import Datepicker from '@vuepic/vue-datepicker';
 // import '@vuepic/vue-datepicker/dist/main.css';
+
 import moment from 'moment'
 
 const todos = ref([])
@@ -85,12 +78,13 @@ onMounted(() => {
 })
 </script>
 
-
-
 <template>
   <main class="app" @click="deselectall">
+	<!-- <div>
+		<p>{{ $t('name') }}</p>
+	</div> -->
     <section>
-      <h2>TODO-LIST {{ $t('name') }}</h2>
+      <h2>TODO-LIST </h2>
     </section>
     <section class="create-todo">
       <form @submit.prevent="addTodo" style="user-select: none;">
@@ -151,11 +145,7 @@ onMounted(() => {
             <input type="time" style="font-size: 1.2rem" v-model="input_time"/>
         </div>  -->
 	
-<<<<<<< HEAD
 		<Datepicker class="datetime" v-model="input_date" format="dd/MM/yyyy HH:mm"></Datepicker>
-=======
-		<Datepicker class="datetime" placeholder="Choose a date" v-model="input_date" format="dd/MM/yyyy HH:mm"/>
->>>>>>> 661ab072a023444b7e24e829643349e3299ffcd7
         <input type="submit" value="Add todo" />
        
       </form>
