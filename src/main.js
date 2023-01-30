@@ -1,9 +1,10 @@
 import { createApp } from 'vue'
 import './main.css'
 import App from './App.vue'
-import Datepicker from '@vuepic/vue-datepicker'
-import '@vuepic/vue-datepicker/dist/main.css'
-// import {en, vi} from '@vuepic/vue-datepicker/dist/locale'
+// import Datepicker from '@vuepic/vue-datepicker'
+// import '@vuepic/vue-datepicker/dist/main.css'
+import Datepicker from 'vue3-datepicker/src/datepicker/Datepicker.vue'
+
 import FlagIcon from 'vue-flag-icon'
 import i18n from './lang/i18n'
 

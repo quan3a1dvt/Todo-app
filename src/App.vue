@@ -1,14 +1,11 @@
-<script>
+<script setup>
 import {
   ref,
   onMounted,
   computed
 } from 'vue'
-// import Datepicker from '@vuepic/vue-datepicker';
-// import '@vuepic/vue-datepicker/dist/main.css';
 
 import moment from 'moment'
-
 const todos = ref([])
 const input_content = ref('')
 const input_priority = ref(null)
@@ -16,14 +13,10 @@ const edit_priority = ref(null)
 const edit_date = ref('')
 const edit_content = ref('')
 const input_date = ref('')
+const picked = ref(new Date())
 const todos_asc = computed(() => todos.value.sort((a, b) => {
   return a.datetime - b.datetime
 }))
-
-var options = {
-  month: 'short',
-  day: 'numeric'
-};
 
 const addTodo = () => {
   if (input_content.value.trim() === "" || input_priority.value === null) {
@@ -79,7 +72,7 @@ const deselectall = (() => {
 })
 onMounted(() => {
   todos.value = []
-  input_date.value = new Date()
+  //   input_date.value = new Date()
 })
 </script>
 
@@ -89,8 +82,9 @@ onMounted(() => {
 
 <p>{{ $t('start') }}</p>
   </div> -->
+
   <select v-model="$i18n.locale">
-    <option value="vi">vi</option>
+    <option value="vn">vn</option>
     <option value="en">en</option>
   </select>
   <section>
@@ -131,7 +125,8 @@ onMounted(() => {
             <input type="time" style="font-size: 1.2rem" v-model="input_time"/>
         </div>  -->
 
-      <Datepicker class="datetime" v-model="input_date" lformatLocale="fr" format="dd/MM/yyyy HH:mm"></Datepicker>
+      <!-- <Datepicker class="datetime" v-model="input_date" inputFormat="dd-MM-yyyy" locale="vi"></Datepicker> -->
+
       <input type="submit" value="Add todo" />
 
     </form>
@@ -166,7 +161,7 @@ onMounted(() => {
             <option value="medium">Medium</option>
             <option value="high">High</option>
           </select>
-          <Datepicker class="datetime" v-model="edit_date" format="dd/MM/yyyy HH:mm"></Datepicker>
+          <!-- <Datepicker class="datetime" v-model="edit_date" format="dd/MM/yyyy HH:mm"></Datepicker> -->
           <div class="actions">
             <button class="save" @click="saveTodo(todo)">Save</button>
             <button class="delete" @click="removeTodo(todo)">Delete</button>
