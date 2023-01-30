@@ -1,3 +1,8 @@
+<script>
+export default {
+  name: 'Vue-i18n',
+}
+</script>
 <script setup >
 
 import {ref, onMounted, computed} from 'vue'
@@ -39,8 +44,10 @@ const removeTodo = (todo) => {
 }
 
 const saveTodo = (todo) => {	
-	todo.date = edit_date.value
-	todo.short_date = moment(String(edit_date.value)).format('DD/MM/YYYY hh:mm')
+	if (edit_date.value != null){
+		todo.date = edit_date.value
+		todo.short_date = moment(String(edit_date.value)).format('DD/MM/YYYY hh:mm')
+	}
 	todo.content = edit_content.value
 	todo.selected = false
 	todo.priority = edit_priority.value
@@ -78,7 +85,7 @@ onMounted(() => {
 <template>
   <main class="app" @click="deselectall">
     <section>
-      <h2>TODO-LIST</h2>
+      <h2>TODO-LIST {{ $t('name') }}</h2>
     </section>
     <section class="create-todo">
       <form @submit.prevent="addTodo" style="user-select: none;">
@@ -139,7 +146,7 @@ onMounted(() => {
             <input type="time" style="font-size: 1.2rem" v-model="input_time"/>
         </div>  -->
 	
-		<Datepicker class="datetime" v-model="input_date" inputFormat="dd-MM-YYYY"></Datepicker>
+		<Datepicker class="datetime" v-model="input_date" format="dd/MM/yyyy HH:mm"></Datepicker>
         <input type="submit" value="Add todo" />
        
       </form>
@@ -175,7 +182,7 @@ onMounted(() => {
 							<option value="medium">Medium</option>
 							<option value="high">High</option>
 						</select>
-						<Datepicker class="datetime" v-model="edit_date" :format="format"></Datepicker>
+						<Datepicker class="datetime" v-model="edit_date" format="dd/MM/yyyy HH:mm"></Datepicker>
 						<div class="actions">
 							<button class="save" @click="saveTodo(todo)">Save</button>
 							<button class="delete" @click="removeTodo(todo)">Delete</button>
