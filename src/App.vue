@@ -8,7 +8,7 @@ import {
 
 import moment from 'moment'
 const todos = ref([])
-let ID = ref(0)
+let ID = ref(200)
 const input_content = ref(null)
 const input_priority = ref(null)
 const edit_priority = ref(null)
@@ -30,7 +30,7 @@ watch(ID, (newVal) => {
   localStorage.setItem('ID', newVal)
 })
 
-const pushTodo = (content, piority, id, done, createon, date) => {
+const addTodo = (content, piority, id, done, createon, date) => {
   todos.value.push({
     content: content,
     priority: piority,
@@ -42,7 +42,7 @@ const pushTodo = (content, piority, id, done, createon, date) => {
     short_date: moment(String(date == null ? createon : date)).format('DD/MM/YYYY hh:mm')
   })
 }
-const addTodo = () => {
+const submitTodo = () => {
   if (input_content.value === null || input_content.value.trim() === "") {
     isInputInvalid.value = true
     return
@@ -52,12 +52,28 @@ const addTodo = () => {
   if (input_priority.value === null) {
     return
   }
-  console.log("addTodo")
   ID = ID + 1
-  pushTodo(input_content.value, input_priority.value, ID, false, new Date(), input_date.value)
+  fetch('https://jsonplaceholder.typicode.com/todos', {
+    method: 'POST',
+    body: JSON.stringify({
+      userId: 1,
+      id: ID,
+      title: input_content.value,
+      completed: false
+    }),
+    headers: {
+      'Content-type': 'application/json; charset=UTF-8',
+    },
+  })
+  .then((response) => response.json())
+  .then((json) => console.log(json));
+  addTodo(input_content.value, input_priority.value, ID, false, new Date(), input_date.value)
 }
 
 const removeTodo = (todo) => {
+  fetch('https://jsonplaceholder.typicode.com/todos/' +  + todo.id.toString(), {
+    method: 'DELETE',
+  });
   todos.value = todos.value.filter((t) => t !== todo)
 }
 
@@ -69,6 +85,24 @@ const saveTodo = (todo) => {
   todo.content = edit_content.value
   todo.selected = false
   todo.priority = edit_priority.value
+  apiUpdate(todo)
+}
+
+const apiUpdate = (todo) => {
+  fetch('https://jsonplaceholder.typicode.com/todos/' + todo.id.toString(), {
+    method: 'PATCH',
+    body: JSON.stringify({
+      // userId: 1,
+      id: todo.id,
+      title: todo.content,
+      completed: todo.done
+    }),
+    headers: {
+      'Content-type': 'application/json; charset=UTF-8',
+    },
+  })
+  .then((response) => response.json())
+  .then((json) => console.log(json));
 }
 
 const selected = (todo) => {
@@ -95,14 +129,13 @@ const deselectall = (() => {
 
 onMounted(async () => {
   // todos.value = JSON.parse(localStorage.getItem('todos')) || []
-  ID.value = localStorage.getItem('ID') || 0
   input_date.value = new Date()
   todos.value = []
-  const post = await fetch(`https://jsonplaceholder.typicode.com/posts`).then((a) => a.json()).then((json) => {
+  const post = await fetch(`https://jsonplaceholder.typicode.com/todos`).then((a) => a.json()).then((json) => {
     for (let i in json) {
       let todo = json[i]
       let tmp_createon = new Date()
-      pushTodo(todo['title'], 'low', todo['id'], todo['completed'], tmp_createon, null)
+      addTodo(todo['title'], 'low', todo['id'], todo['completed'], tmp_createon, null)
     }
   })
 })
@@ -119,7 +152,7 @@ onMounted(async () => {
     <h2>TODO-LIST </h2>
   </section>
   <section class="create-todo">
-    <form @submit.prevent="addTodo" style="user-select: none;">
+    <form @submit.prevent="submitTodo" style="user-select: none;">
       <input type="text" :placeholder="$t('content')" v-model="input_content" :class="{'error-boarder':isInputInvalid}" />
       <h4>{{ $t('priority.set') }}</h4>
       <div class="options">
@@ -161,7 +194,7 @@ onMounted(async () => {
       <div v-for="todo in todos_asc" :class="`todo-item ${todo.done && 'done'}`" @click.stop @dblclick="selected(todo)">
         <div v-if="!todo.selected" class="show">
           <label>
-            <input type="checkbox" v-model="todo.done" />
+            <input type="checkbox" v-model="todo.done" @click="apiUpdate(todo)" />
             <span :class="`bubble ${todo.priority}`"></span>
           </label>
 
