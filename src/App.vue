@@ -2,37 +2,59 @@
 import {
   ref,
   onMounted,
-  computed
+  computed,
+  watch
 } from 'vue'
 
 import moment from 'moment'
 const todos = ref([])
-const input_content = ref('')
+let ID = ref(0)
+const input_content = ref(null)
 const input_priority = ref(null)
 const edit_priority = ref(null)
 const edit_date = ref('')
 const edit_content = ref('')
 const input_date = ref('')
-const picked = ref(new Date())
+const isInputInvalid = ref(false)
 const todos_asc = computed(() => todos.value.sort((a, b) => {
-  return a.datetime - b.datetime
+  return a.date - b.date
 }))
 
+watch(todos, (newVal) => {
+  localStorage.setItem('todos', JSON.stringify(newVal))
+}, {
+  deep: true
+})
+
+watch(ID, (newVal) => {
+  localStorage.setItem('ID', newVal)
+})
+
+const pushTodo = (content, piority, id, done, createon, date) => {
+  todos.value.push({
+    content: content,
+    priority: piority,
+    id: id,
+    done: done,
+    selected: false,
+    createon: createon,
+    date: date == null ? createon : date,
+    short_date: moment(String(date == null ? createon : date)).format('DD/MM/YYYY hh:mm')
+  })
+}
 const addTodo = () => {
-  if (input_content.value.trim() === "" || input_priority.value === null) {
+  if (input_content.value === null || input_content.value.trim() === "") {
+    isInputInvalid.value = true
+    return
+  } else {
+    isInputInvalid.value = false
+  }
+  if (input_priority.value === null) {
     return
   }
   console.log("addTodo")
-  let tmp_createon = new Date()
-  todos.value.push({
-    content: input_content.value,
-    priority: input_priority.value,
-    done: false,
-    selected: false,
-    createon: tmp_createon,
-    date: input_date.value == null ? tmp_createon : input_date.value,
-    short_date: moment(String(input_date.value == null ? tmp_createon : input_date.value)).format('DD/MM/YYYY hh:mm')
-  })
+  ID = ID + 1
+  pushTodo(input_content.value, input_priority.value, ID, false, new Date(), input_date.value)
 }
 
 const removeTodo = (todo) => {
@@ -70,21 +92,27 @@ const deselectall = (() => {
     todos.value[i].selected = false;
   }
 })
-onMounted(() => {
+
+onMounted(async () => {
+  // todos.value = JSON.parse(localStorage.getItem('todos')) || []
+  ID.value = localStorage.getItem('ID') || 0
+  input_date.value = new Date()
   todos.value = []
-  //   input_date.value = new Date()
+  const post = await fetch(`https://jsonplaceholder.typicode.com/posts`).then((a) => a.json()).then((json) => {
+    for (let i in json) {
+      let todo = json[i]
+      let tmp_createon = new Date()
+      pushTodo(todo['title'], 'low', todo['id'], todo['completed'], tmp_createon, null)
+    }
+  })
 })
 </script>
 
 <template>
 <main class="app" @click="deselectall">
-  <!-- <div>
-
-<p>{{ $t('start') }}</p>
-  </div> -->
 
   <select v-model="$i18n.locale">
-    <option value="vn">vn</option>
+    <option value="vi">vi</option>
     <option value="en">en</option>
   </select>
   <section>
@@ -92,7 +120,7 @@ onMounted(() => {
   </section>
   <section class="create-todo">
     <form @submit.prevent="addTodo" style="user-select: none;">
-      <input type="text" :placeholder="$t('content')" v-model="input_content" />
+      <input type="text" :placeholder="$t('content')" v-model="input_content" :class="{'error-boarder':isInputInvalid}" />
       <h4>{{ $t('priority.set') }}</h4>
       <div class="options">
         <label>
@@ -120,12 +148,8 @@ onMounted(() => {
         </label>
       </div>
       <h4>{{ $t('pickdate') }}</h4>
-      <!-- <div class="datetime">
-            <input type="date" style="font-size: 1.2rem" v-model="input_date"/>
-            <input type="time" style="font-size: 1.2rem" v-model="input_time"/>
-        </div>  -->
 
-      <!-- <Datepicker class="datetime" v-model="input_date" inputFormat="dd-MM-yyyy" locale="vi"></Datepicker> -->
+      <Datepicker class="datetime" v-model="input_date" format="dd/MM/yyyy HH:mm" :locale="$t('common.lang')" :cancelText="$t('datepicker.cancel')" :selectText="$t('datepicker.select')"></Datepicker>
 
       <input type="submit" value="Add todo" />
 
@@ -155,16 +179,15 @@ onMounted(() => {
             <input type="text" v-model="edit_content" />
           </div>
           <select class="priority" v-model="edit_priority">
-            <!-- <option selected disabled>{{ todo.priority.toUpperCase() }}</option> -->
-            <option value="none">None</option>
-            <option value="low">Low</option>
-            <option value="medium">Medium</option>
-            <option value="high">High</option>
+            <option value="none">{{ $t('priority.none') }}</option>
+            <option value="low">{{ $t('priority.low') }}</option>
+            <option value="medium">{{ $t('priority.medium') }}</option>
+            <option value="high">{{ $t('priority.high') }}</option>
           </select>
-          <!-- <Datepicker class="datetime" v-model="edit_date" format="dd/MM/yyyy HH:mm"></Datepicker> -->
+          <Datepicker class="datetime" v-model="edit_date" format="dd/MM/yyyy HH:mm" :locale="$t('common.lang')" :cancelText="$t('datepicker.cancel')" :selectText="$t('datepicker.select')"></Datepicker>
           <div class="actions">
-            <button class="save" @click="saveTodo(todo)">Save</button>
-            <button class="delete" @click="removeTodo(todo)">Delete</button>
+            <button class="save" @click="saveTodo(todo)">{{ $t('save') }}</button>
+            <button class="delete" @click="removeTodo(todo)">{{ $t('delete') }}</button>
           </div>
         </div>
       </div>

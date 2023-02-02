@@ -1,16 +1,16 @@
 
 import { createI18n } from 'vue-i18n'
-import vnMessage from './vn.json'
+import viMessage from './vi.json'
 import enMessage from './en.json'
 
 
 const messages = {
-  vn: vnMessage,
+  vi: viMessage,
   en: enMessage,
 }
 
 const i18n = createI18n({
-  locale: 'vn', // set locale
+  locale: 'en', // set locale
   messages,
 })
 

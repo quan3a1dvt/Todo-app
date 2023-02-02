@@ -87,7 +87,7 @@ h4 {
 	color: var(--dark);
 	background-color: #FFF;
 	border-radius: 0.5rem;
-	box-shadow: var(--shadow);
+	/* box-shadow: var(--shadow); */
 	margin-bottom: 1.5rem;
 }
 
@@ -332,4 +332,8 @@ input:checked ~ .bubble::after {
 .todo-item.done .todo-content input {
 	text-decoration: line-through;
 	color: var(--grey);
+}
+
+.error-boarder {
+  box-shadow: 0 0px 5px rgba(228, 22, 22, 0.972);
 }

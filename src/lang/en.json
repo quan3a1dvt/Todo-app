@@ -1,8 +1,9 @@
 {
     "common": {
-        "select_lang": "Language"
+        "select_lang": "Language",
+        "lang": "en"
     },    
-    "start": "Hello",
+    "start": "Hi",
     "content": "Enter new To-do",
     "priority": {
         "set": "Set priority",
@@ -11,6 +12,11 @@
         "medium": "Medium",
         "high": "High"
     },
-    "pickdate": "Set date and time"
-    
+    "pickdate": "Set date and time",
+    "datepicker":{
+        "select": "Select",
+        "cancel": "Cancel"
+    },
+    "save": "Save",
+    "delete": "Delete"
 }

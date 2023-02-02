@@ -1,0 +1,22 @@
+{
+    "common": {
+        "select_lang": "Ngôn ngữ",
+        "lang": "vi"
+    },
+    "start": "Chào",
+    "content": "Ghi chú",
+    "priority": {
+        "set": "Ưu tiên",
+        "none": "Không",
+        "low": "Thấp",
+        "medium": "Trung bình",
+        "high": "Cao"
+    },
+    "pickdate": "Ngày & giờ",
+    "datepicker":{
+        "select": "Chọn",
+        "cancel": "Huỷ"
+    },
+    "save": "Lưu",
+    "delete": "Xoá"
+}
