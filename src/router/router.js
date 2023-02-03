@@ -1,13 +1,33 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-// import Todos from '../components/Todos.vue'
-const Todos = { template: '<div>Home</div>' }
+import App from '../App.vue'
+import Home from '../components/Home.vue'
+import Post from '../components/Post.vue'
+import Edit from '../components/Edit.vue'
+import Main from '../components/Main.vue'
 const routes = [
     {
-        path: '/todos',
-        name: 'Todos',
-        component: Todos
+        path: '/',
+        name: 'Home',
+        component: Home
     },
+    {
+        path: '/todo',
+        component: Main
+    },
+    {
+        path: '/post',
+        name: 'Post',
+        props: true,
+        component: Post
+    },
+    {
+        path: '/post/:id',
+        name: 'Edit',
+        props: true,
+        component: Edit
+    },
+
 ]
 
 const router = createRouter({

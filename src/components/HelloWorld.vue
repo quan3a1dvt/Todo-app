@@ -1,4 +1,4 @@
-<script setup>
+<!-- <script setup>
 import { ref } from 'vue'
 
 defineProps({
@@ -6,9 +6,11 @@ defineProps({
 })
 
 const count = ref(0)
+</script> -->
+<script>
+export default {}
 </script>
-
-<template>
+<!-- <template>
   <h1>{{ msg }}</h1>
 
   <div class="card">
@@ -37,4 +39,4 @@ const count = ref(0)
 .read-the-docs {
   color: #888;
 }
-</style>
+</style> -->
