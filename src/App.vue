@@ -7,6 +7,7 @@ import {
 } from 'vue'
 
 import moment from 'moment'
+import {get, del, patch, post} from './api/api'
 const todos = ref([])
 let ID = ref(200)
 const input_content = ref(null)
@@ -53,27 +54,12 @@ const submitTodo = () => {
     return
   }
   ID = ID + 1
-  fetch('https://jsonplaceholder.typicode.com/todos', {
-    method: 'POST',
-    body: JSON.stringify({
-      userId: 1,
-      id: ID,
-      title: input_content.value,
-      completed: false
-    }),
-    headers: {
-      'Content-type': 'application/json; charset=UTF-8',
-    },
-  })
-  .then((response) => response.json())
-  .then((json) => console.log(json));
   addTodo(input_content.value, input_priority.value, ID, false, new Date(), input_date.value)
+  post(todos.value.slice(-1))
 }
 
 const removeTodo = (todo) => {
-  fetch('https://jsonplaceholder.typicode.com/todos/' +  + todo.id.toString(), {
-    method: 'DELETE',
-  });
+  del(todo.id)
   todos.value = todos.value.filter((t) => t !== todo)
 }
 
@@ -89,20 +75,7 @@ const saveTodo = (todo) => {
 }
 
 const apiUpdate = (todo) => {
-  fetch('https://jsonplaceholder.typicode.com/todos/' + todo.id.toString(), {
-    method: 'PATCH',
-    body: JSON.stringify({
-      // userId: 1,
-      id: todo.id,
-      title: todo.content,
-      completed: todo.done
-    }),
-    headers: {
-      'Content-type': 'application/json; charset=UTF-8',
-    },
-  })
-  .then((response) => response.json())
-  .then((json) => console.log(json));
+  patch(todo.id, todo)
 }
 
 const selected = (todo) => {
@@ -131,11 +104,10 @@ onMounted(async () => {
   // todos.value = JSON.parse(localStorage.getItem('todos')) || []
   input_date.value = new Date()
   todos.value = []
-  const post = await fetch(`https://jsonplaceholder.typicode.com/todos`).then((a) => a.json()).then((json) => {
-    for (let i in json) {
-      let todo = json[i]
-      let tmp_createon = new Date()
-      addTodo(todo['title'], 'low', todo['id'], todo['completed'], tmp_createon, null)
+  get().then( function(result) {
+    for (let i in result) {
+      let todo = result[i]
+      addTodo(todo['content'], todo['priority'], todo['id'], todo['done'], todo['createon'], todo['date'])
     }
   })
 })
