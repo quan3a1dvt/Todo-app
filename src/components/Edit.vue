@@ -6,15 +6,15 @@ import {
 } from 'vue'
 import { useRoute } from 'vue-router';
 import {get, del, patch, post} from '../api/api'
+const todos = ref([])
 const route = useRoute(); 
 const id = ref(0)
-const todos = ref([])
 const todo = ref(null)
 const edit_priority = ref(null)
 const edit_date = ref('')
 const edit_content = ref('')
 
-watch(todos, (newVal) => {
+watch(todos.value, (newVal) => {
   localStorage.setItem('todos', JSON.stringify(newVal))
 }, {
   deep: true

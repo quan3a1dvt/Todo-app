@@ -32,6 +32,7 @@ watch(ID, (newVal) => {
 })
 
 const addTodo = (content, piority, id, done, createon, date) => {
+  console.log(createon)
   todos.value.push({
     content: content,
     priority: piority,
@@ -101,13 +102,19 @@ const deselectall = (() => {
 })
 
 onMounted(async () => {
-  // todos.value = JSON.parse(localStorage.getItem('todos')) || []
+  todos.value = JSON.parse(localStorage.getItem('todos')) || []
   input_date.value = new Date()
-  todos.value = []
+  let idList = []
+  for (let todo of todos.value) {
+    idList.push(todo['id'])
+  }
   get().then( function(result) {
-    for (let i in result) {
-      let todo = result[i]
-      addTodo(todo['content'], todo['priority'], todo['id'], todo['done'], todo['createon'], todo['date'])
+    for (let todo of result) {
+      if (idList.includes(todo['id'])) {}
+      else{
+        idList.push(todo['id'])
+        addTodo(todo['content'], todo['priority'], todo['id'], todo['done'], todo['createon'], todo['date'])
+      }
     }
   })
 })
